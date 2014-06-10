@@ -4,7 +4,8 @@
   <script src="javascripts/jquery-1.11.1.min.js"></script>
   <script src="javascripts/d3.min.js"></script>
   <script src="javascripts/vivagraph.js"></script> 
-  <script src="javascripts/underscore-min.js"></script>  
+  <script src="javascripts/underscore-min.js"></script> 
+  <script src="sample_data/data.js"></script> 
 </head>
 <body onload='main()'>
 
@@ -12,7 +13,7 @@
 
 <script type="text/javascript">
         var level1Data;
-        var getChildren = function(parent_id, data_a) {
+        var getChildren = function(parent_id) {
           data_a = data_a ||level1Data;
           if(parent_id == 'root'){
             return getRoots();
@@ -46,9 +47,9 @@
             theta: 0.8
           });
 
-          $.getJSON("sample_data/a.json", function(json) {
-              level1Data = json;
-              var roots = getRoots(json);
+          // $.getJSON("sample_data/a.json", function(json) {
+          //     level1Data = json;
+              var roots = getRoots(data_a);
 
               roots.forEach(function(data){
                 console.log(data)
@@ -57,7 +58,7 @@
                 graph.addLink('Capabilities', data.name, data);
               })
               
-          });
+          // });
           
             var nodeSize = 24;
 
