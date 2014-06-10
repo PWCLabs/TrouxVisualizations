@@ -65,15 +65,31 @@
               // This time it's a group of elements: http://www.w3.org/TR/SVG/struct.html#Groups
               var ui = Viva.Graph.svg('g'),
                   // Create SVG text element with user id as content
-                  svgText = Viva.Graph.svg('text').attr('y', '-4px').text(node.id),
-                  img = Viva.Graph.svg('image')
-                     .attr('width', nodeSize)
-                     .attr('height', nodeSize)
-                     .attr('style', 'cursor: pointer')
-                     .link('https://secure.gravatar.com/avatar/' + node.data.name);
+                   svgText = Viva.Graph.svg('text').text(node.id),
+                  // img = Viva.Graph.svg('image')
+                  //    .attr('width', nodeSize)
+                  //    .attr('height', nodeSize)
+                  //    .attr('style', 'cursor: pointer')
+                  //    .link('https://secure.gravatar.com/avatar/' + node.data.name);
+                   circle = Viva.Graph.svg('circle').attr('stroke', '#606060').attr('stroke-width', '1.5px');
+
+                   if(node.id == 'Capabilities'){
+                      svgText.attr('y', '-44px');
+                     circle.attr('r', '40px').attr("fill", 'red');
+                   }else if(node.data.level == 1){
+                    svgText.attr('y', '-34px');
+                      circle.attr('r', '30px').attr("fill", 'green');
+                    }else if(node.data.level == 2){
+                      svgText.attr('y', '-24px');
+                      circle.attr('r', '20px').attr("fill", 'brown');
+                    }else{
+                      svgText.attr('y', '-14px');
+                      circle.attr('r', '10px').attr("fill", 'yellow');
+                    }
+                    
 
                   ui.append(svgText);
-                  ui.append(img);
+                  ui.append(circle);
                 $(ui).click(function() { // click action
                     console.log(node.data)
                     if(node.data.childCapabilities){
@@ -101,34 +117,34 @@
                 
                 nodeUI.attr('transform',
                             'translate(' +
-                                  (pos.x - nodeSize/2) + ',' + (pos.y - nodeSize/2) +
+                                  (pos.x ) + ',' + (pos.y ) +
                             ')');
             });
             
-            graphics.link(function(link){
-              console.log(link)
-              var path = Viva.Graph.svg('path');
-              if(link.data.level == 1){
-                path.attr('stroke', 'red')
-                           .attr('stroke-dasharray', '5, 5');
-              }else if(link.data.level == 2){
-                path.attr('stroke', 'blue')
-                           .attr('stroke-dasharray', '5, 5');
-              }else{
-                path.attr('stroke', 'green')
-                           .attr('stroke-dasharray', '5, 5');
-              }
-                return path;
+            // graphics.link(function(link){
+            //   console.log(link)
+            //   var path = Viva.Graph.svg('path');
+            //   if(link.data.level == 1){
+            //     path.attr('stroke', 'red')
+            //                .attr('stroke-dasharray', '5, 5');
+            //   }else if(link.data.level == 2){
+            //     path.attr('stroke', 'blue')
+            //                .attr('stroke-dasharray', '5, 5');
+            //   }else{
+            //     path.attr('stroke', 'green')
+            //                .attr('stroke-dasharray', '5, 5');
+            //   }
+            //     return path;
                            
-            }).placeLink(function(linkUI, fromPos, toPos) {
-                // linkUI - is the object returend from link() callback above.
-                var data = 'M' + fromPos.x + ',' + fromPos.y +
-                           'L' + toPos.x + ',' + toPos.y;
+            // }).placeLink(function(linkUI, fromPos, toPos) {
+            //     // linkUI - is the object returend from link() callback above.
+            //     var data = 'M' + fromPos.x + ',' + fromPos.y +
+            //                'L' + toPos.x + ',' + toPos.y;
 
-                // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
-                // is a common way of rendering paths in SVG:
-                linkUI.attr("d", data);
-            });
+            //     // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
+            //     // is a common way of rendering paths in SVG:
+            //     linkUI.attr("d", data);
+            // });
 
             var renderer = Viva.Graph.View.renderer(graph,{
               graphics : graphics,
