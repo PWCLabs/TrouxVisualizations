@@ -37,7 +37,7 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height+100)
   .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+    .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 50) + ")");
 
 var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d.name; });
 
