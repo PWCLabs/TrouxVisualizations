@@ -85,6 +85,7 @@ var path = svg.selectAll("path")
     .attr("d", arc)
     .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
     .on("mouseover", tip.show)
+    .on("mouseout", tip.hide)
     .on("click", click);
 
 function click(d) {
