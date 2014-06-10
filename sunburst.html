@@ -83,7 +83,7 @@ var path = svg.selectAll("path")
     .data(partition.nodes(root_node))
   .enter().append("path")
     .attr("d", arc)
-    .style("fill", function(d) { return color(d.name); })
+    .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
     .on("mouseover", tip.show)
     .on("click", click);
 
