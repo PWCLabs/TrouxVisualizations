@@ -1,33 +1,88 @@
-<!DOCTYPE html>
 <html>
 <head>
   <link data-turbolinks-track="true" href="stylesheets/bootstrap.min.css" media="all" rel="stylesheet">
   <script src="javascripts/jquery-1.11.1.min.js"></script>
- 
-  <script src="javascripts/vivagraph.js"></script>  
+  <script src="javascripts/d3.min.js"></script>
+  <script src="javascripts/vivagraph.js"></script> 
+  <script src="javascripts/underscore-min.js"></script>  
 </head>
 <body onload='main()'>
 
 </body>
 
 <script type="text/javascript">
+        var getChildren = function(parent_id, data_a) {
+          if(parent_id == 'root'){
+            return getRoots();
+          }
+          else
+            return _.select(data_a["elem"], 
+              function(e) {
+                return e["parentCapability"].length>0 && e["parentCapability"][0]["_id"] == parent_id;
+              });
+        };
+
+        var getRoots = function(data_a) {
+          return  _.select(data_a["elem"],
+              function(e) {
+                return e["parentCapability"].length == 0;
+              });
+        };
+
+
         function main () {
-            // Step 1. We create a graph object.
-            var graph = Viva.Graph.graph();
 
-            // Step 2. We add nodes and edges to the graph:
-            graph.addLink(1, 2);
+          var graph = Viva.Graph.graph();
+          graph.addNode('Capabilities',{name:'Capabilities'});
 
-            /* Note: graph.addLink() creates new nodes if they are not yet
-               present in the graph. Thus calling this method is equivalent to:
+          var graphics = Viva.Graph.View.svgGraphics();
 
-               graph.addNode(1);
-               graph.addNode(2);
-               graph.addLink(1, 2);
-            */
 
-            // Step 3. Render the graph.
-            var renderer = Viva.Graph.View.renderer(graph);
+          $.getJSON("sample_data/a.json", function(json) {
+              
+              var roots = getRoots(json);
+
+              roots.forEach(function(data){
+                console.log(data)
+                var nodeData = {name: data.name}
+                graph.addNode(data.name, {name : data.name})
+                graph.addLink('Capabilities', data.name);
+              })
+              
+          });
+          
+            var nodeSize = 24;
+
+            graphics.node(function(node) {
+              // This time it's a group of elements: http://www.w3.org/TR/SVG/struct.html#Groups
+              var ui = Viva.Graph.svg('g'),
+                  // Create SVG text element with user id as content
+                  svgText = Viva.Graph.svg('text').attr('y', '-4px').text(node.id),
+                  img = Viva.Graph.svg('image')
+                     .attr('width', nodeSize)
+                     .attr('height', nodeSize)
+                     .attr('style', 'cursor: pointer')
+                     .link('https://secure.gravatar.com/avatar/' + node.data.name);
+
+                  ui.append(svgText);
+                  ui.append(img);
+                $(ui).click(function() { // click action
+                    
+                });
+
+              return ui;
+            }).placeNode(function(nodeUI, pos) {
+                // 'g' element doesn't have convenient (x,y) attributes, instead
+                // we have to deal with transforms: http://www.w3.org/TR/SVG/coords.html#SVGGlobalTransformAttribute
+                nodeUI.attr('transform',
+                            'translate(' +
+                                  (pos.x - nodeSize/2) + ',' + (pos.y - nodeSize/2) +
+                            ')');
+            });
+            
+            var renderer = Viva.Graph.View.renderer(graph,{
+              graphics : graphics
+            });
             renderer.run();
         }
     </script>
