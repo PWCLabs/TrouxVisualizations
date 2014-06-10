@@ -1,13 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link href="stylesheets/bootstrap.min.css" media="all" rel="stylesheet">
-  <script src="javascripts/jquery-1.11.1.min.js"></script>
-  <script src="javascripts/d3.min.js"></script>
-  <script src="javascripts/bootstrap.min.js"></script>  
+	<link href="stylesheets/bootstrap.min.css" media="all" rel="stylesheet">
+	<link href="stylesheets/bootstrap-theme.min.css" media="all" rel="stylesheet">
+	<script src="javascripts/jquery-1.11.1.min.js"></script>
+	<script src="javascripts/d3.min.js"></script>
+	<script src="javascripts/bootstrap.min.js"></script>  
+	<style type="text/css">
+		.desc {
+			height: 120px;
+		}
+		.img-circle{
+			background-color: #eee;
+		}
+	</style>>
 </head>
 <body>
-  <a href="sunburst.html">D3 Zoomable Sunburst</a>
-  <a href="viva.html">viva</a>
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">
+					<h3 style='margin:5px'>Troux Visualizations</h3>
+				</a>
+			</div>
+
+		</div>
+	</div>
+	<br><br>
+	<br><br>
+	<div class='container'>
+
+		<div class="row">
+			<div class="col-md-4" style='text-align:center;'>
+				<img class="img-circle" data-src="holder.js/140x140" alt="140x140" src="images/sunburst.png" style="width: 140px; height: 140px;">
+				<h3><a href="sunburst.html">Zoomable Sunburst</a></h3>
+				<p class='desc' style='text-align:left;'>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p><a class="btn btn-default" href="sunburst.html" role="button">View details »</a></p>
+			</div><!-- /.col-lg-4 -->
+			<div class="col-md-4" style='text-align:center;'>
+				<img class="img-circle" data-src="holder.js/140x140" alt="140x140" src="images/viva_logo.png" style="width: 140px; height: 140px;">
+				<h3> <a href="viva.html">VivaGraph</a></h3>
+				<p  class='desc' style='text-align:left;'>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+				<p><a class="btn btn-default" href="viva.html" role="button">View details »</a></p>
+			</div><!-- /.col-lg-4 -->
+			<div class="col-md-4" style='text-align:center;'>
+				<img class="img-circle" data-src="holder.js/140x140" alt="140x140" src="images/tree_logo.png"  style="width: 140px; height: 140px;">
+				<h3><a href="viva.html">Zoomable & Collapsible Tree</a></h3>
+				<p class='desc' style='text-align:left;'>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+				<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+			</div><!-- /.col-lg-4 -->
+		</div>
+	</div>
+
+	<div style="position: fixed;right: 100px;bottom:0px;">
+		© PricewaterhouseCoopers LLP 2014
+	</div>
+
 </body>
 </html>
