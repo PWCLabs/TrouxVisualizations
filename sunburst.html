@@ -6,6 +6,8 @@
   <script src="javascripts/bootstrap.min.js"></script> 
   <script src="javascripts/underscore-min.js"></script> 
   <script src="sample_data/data.js"></script>
+  <script src="javascripts/d3-tip.js"></script>
+  <link rel="stylesheet" href="stylesheets/d3-tip.css">
 </head>
 
 <style>
@@ -33,9 +35,14 @@ var color = d3.scale.category20c();
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", height+100)
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+
+var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d.name; });
+
+/* Invoke the tip in the context of your visualization */
+svg.call(tip);
 
 var getChildren = function(parent_id) {
   if(parent_id == 'root'){
@@ -55,6 +62,11 @@ var getRoots = function() {
       });
 };
 
+var showTitle = function(d) {
+
+  console.log(d.name);
+}
+
 var root_node = { _id: 'root', name: 'root' };
 
 var partition = d3.layout.partition()
@@ -71,10 +83,8 @@ var path = svg.selectAll("path")
     .data(partition.nodes(root_node))
   .enter().append("path")
     .attr("d", arc)
-    .attr("title", function(d) { return d.name; })
     .style("fill", function(d) { return color(d.name); })
-    // .style("fill", 'none')
-    .on('mouseover', console.log('hover'))
+    .on("mouseover", tip.show)
     .on("click", click);
 
 function click(d) {
