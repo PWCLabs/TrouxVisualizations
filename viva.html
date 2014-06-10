@@ -11,7 +11,9 @@
 </body>
 
 <script type="text/javascript">
+        var level1Data;
         var getChildren = function(parent_id, data_a) {
+          data_a = data_a ||level1Data;
           if(parent_id == 'root'){
             return getRoots();
           }
@@ -36,17 +38,23 @@
           graph.addNode('Capabilities',{name:'Capabilities'});
 
           var graphics = Viva.Graph.View.svgGraphics();
-
+          var layout = Viva.Graph.Layout.forceDirected(graph, {
+            springLength: 140,
+            springCoeff: 0.0001,
+            dragCoeff: 0.02,
+            gravity: -20,
+            theta: 0.8
+          });
 
           $.getJSON("sample_data/a.json", function(json) {
-              
+              level1Data = json;
               var roots = getRoots(json);
 
               roots.forEach(function(data){
                 console.log(data)
-                var nodeData = {name: data.name}
-                graph.addNode(data.name, {name : data.name})
-                graph.addLink('Capabilities', data.name);
+                data.level = 1;
+                graph.addNode(data.name,  data);
+                graph.addLink('Capabilities', data.name, data);
               })
               
           });
@@ -67,21 +75,64 @@
                   ui.append(svgText);
                   ui.append(img);
                 $(ui).click(function() { // click action
+                    console.log(node.data)
+                    if(node.data.childCapabilities){
+                      node.data.childCapabilities.forEach(function(child){
+                        child.level = 2;
+                        graph.addNode(child.name,  child)
+                        graph.addLink(node.id, child.name, child);
+                      })
+                    }else{
+                      var childs = getChildren(node.data._id);
+                      
+                      childs.forEach(function(child){
+                        console.log(child)
+                        child.level = 3;
+                        graph.addNode(child.name,  child);
+                        graph.addLink(node.id, child.name, child);
+                      })
+                      
+                    }
                     
                 });
 
               return ui;
             }).placeNode(function(nodeUI, pos) {
-                // 'g' element doesn't have convenient (x,y) attributes, instead
-                // we have to deal with transforms: http://www.w3.org/TR/SVG/coords.html#SVGGlobalTransformAttribute
+                
                 nodeUI.attr('transform',
                             'translate(' +
                                   (pos.x - nodeSize/2) + ',' + (pos.y - nodeSize/2) +
                             ')');
             });
             
+            graphics.link(function(link){
+              console.log(link)
+              var path = Viva.Graph.svg('path');
+              if(link.data.level == 1){
+                path.attr('stroke', 'red')
+                           .attr('stroke-dasharray', '5, 5');
+              }else if(link.data.level == 2){
+                path.attr('stroke', 'blue')
+                           .attr('stroke-dasharray', '5, 5');
+              }else{
+                path.attr('stroke', 'green')
+                           .attr('stroke-dasharray', '5, 5');
+              }
+                return path;
+                           
+            }).placeLink(function(linkUI, fromPos, toPos) {
+                // linkUI - is the object returend from link() callback above.
+                var data = 'M' + fromPos.x + ',' + fromPos.y +
+                           'L' + toPos.x + ',' + toPos.y;
+
+                // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
+                // is a common way of rendering paths in SVG:
+                linkUI.attr("d", data);
+            });
+
             var renderer = Viva.Graph.View.renderer(graph,{
-              graphics : graphics
+              graphics : graphics,
+              layout : layout,
             });
             renderer.run();
         }
