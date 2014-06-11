@@ -52,8 +52,42 @@
 <body>
   <div id="tree-container"></div>
   <script>
-    // get treeData
-    var treeData = data_c;
+    var elems = data_a.elem;
+
+    var data = _(elems).map(function(elem) {
+      var parent, parentId;
+      parent = elem.parentCapability;
+      if (!_(parent).isEmpty()) parentId = _(parent).first()._id;
+      return {
+        id: elem._id,
+        name: elem.name,
+        parentId: parentId
+      };
+    });
+
+    var treeData = {
+      name: 'root',
+      children: []
+    };
+
+    var addNodes = function(root, data, parentId) {
+      var selected;
+      selected = _(data).select(function(x) {
+        return x.parentId === parentId;
+      });
+      if (!_(selected).isEmpty()) {
+        data = _(data).reject(function(x) {
+          return x.parentId === parentId;
+        });
+        return _(selected).each(function(x) {
+          (root.children || (root.children = [])).push(x);
+          return addNodes(x, data, x.id);
+        });
+      }
+    };
+
+    addNodes(treeData, data, void 0);
+
     // Calculate total nodes, max label length
     var totalNodes = 0;
     var maxLabelLength = 0;
