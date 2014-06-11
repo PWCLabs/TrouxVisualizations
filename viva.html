@@ -40,11 +40,11 @@
 
           var graphics = Viva.Graph.View.svgGraphics();
           var layout = Viva.Graph.Layout.forceDirected(graph, {
-            springLength: 140,
+            springLength: 200,
             springCoeff: 0.0001,
-            dragCoeff: 0.02,
+            dragCoeff: 0.01,
             gravity: -20,
-            theta: 0.8
+            theta: 0.5
           });
 
           // $.getJSON("sample_data/a.json", function(json) {
@@ -67,7 +67,7 @@
               var ui = Viva.Graph.svg('g'),
                   // Create SVG text element with user id as content
                    svgText = Viva.Graph.svg('text').text(node.id),
-                   node_title_shadow = Viva.Graph.svg('text').attr('y', '5px').text(node.id).attr('stroke', '#cdcdcd').attr('stroke-width', '3px').attr('stroke-opacity', '0.8').attr('font-size', '16px').attr('font-family', 'Roboto').attr('text-anchor', 'right'),
+                   node_title_shadow = Viva.Graph.svg('text').attr('y', '5px').text(node.id).attr('stroke', '#adadad').attr('stroke-width', '1px').attr('stroke-opacity', '0.8').attr('font-size', '12px').attr('font-family', 'Arial').attr('text-anchor', 'right'),
                   // img = Viva.Graph.svg('image')
                   //    .attr('width', nodeSize)
                   //    .attr('height', nodeSize)
@@ -76,21 +76,21 @@
                    circle = Viva.Graph.svg('circle').attr('stroke', '#606060').attr('stroke-width', '1.5px');
 
                    if(node.id == 'Capabilities'){
-                      node_title_shadow.attr('x',   '35px')
+                      node_title_shadow.attr('x',   '30px')
                       svgText.attr('y', '-44px');
-                     circle.attr('r', '30px').attr("fill", 'red');
+                     circle.attr('r', '25px').attr("fill", '#F9906F');
                    }else if(node.data.level == 1){
                       node_title_shadow.attr('x',   '25px')
                       svgText.attr('y', '-34px');
-                      circle.attr('r', '20px').attr("fill", 'green');
+                      circle.attr('r', '20px').attr("fill", '#E0EEE8');
                     }else if(node.data.level == 2){
-                      node_title_shadow.attr('x',   '15px').attr('font-size', '12px')
+                      node_title_shadow.attr('x',   '25px').attr('font-size', '12px')
                       svgText.attr('y', '-24px');
-                      circle.attr('r', '10px').attr("fill", 'brown');
+                      circle.attr('r', '15px').attr("fill", '#7FECAD');
                     }else{
-                      node_title_shadow.attr('x',   '10px').attr('font-size', '10px')
+                      node_title_shadow.attr('x',   '25px').attr('font-size', '12px')
                       svgText.attr('y', '-14px');
-                      circle.attr('r', '5px').attr("fill", 'yellow');
+                      circle.attr('r', '10px').attr("fill", '#EEDEB0');
                     }
                     
                   ui.append(node_title_shadow);
@@ -108,7 +108,6 @@
                       var childs = getChildren(node.data._id);
                       
                       childs.forEach(function(child){
-                        console.log(child)
                         child.level = 3;
                         graph.addNode(child.name,  child);
                         graph.addLink(node.id, child.name, child);
@@ -127,30 +126,22 @@
                             ')');
             });
             
-            // graphics.link(function(link){
-            //   console.log(link)
-            //   var path = Viva.Graph.svg('path');
-            //   if(link.data.level == 1){
-            //     path.attr('stroke', 'red')
-            //                .attr('stroke-dasharray', '5, 5');
-            //   }else if(link.data.level == 2){
-            //     path.attr('stroke', 'blue')
-            //                .attr('stroke-dasharray', '5, 5');
-            //   }else{
-            //     path.attr('stroke', 'green')
-            //                .attr('stroke-dasharray', '5, 5');
-            //   }
-            //     return path;
-                           
-            // }).placeLink(function(linkUI, fromPos, toPos) {
-            //     // linkUI - is the object returend from link() callback above.
-            //     var data = 'M' + fromPos.x + ',' + fromPos.y +
-            //                'L' + toPos.x + ',' + toPos.y;
+            graphics.link(function(link){
+              console.log(link)
+              var path = Viva.Graph.svg('path');
+               path.attr('stroke', '#333');
+               return path;
 
-            //     // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
-            //     // is a common way of rendering paths in SVG:
-            //     linkUI.attr("d", data);
-            // });
+                           
+            }).placeLink(function(linkUI, fromPos, toPos) {
+                // linkUI - is the object returend from link() callback above.
+                var data = 'M' + fromPos.x + ',' + fromPos.y +
+                           'L' + toPos.x + ',' + toPos.y;
+
+                // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
+                // is a common way of rendering paths in SVG:
+                linkUI.attr("d", data);
+            });
 
             var renderer = Viva.Graph.View.renderer(graph,{
               graphics : graphics,
