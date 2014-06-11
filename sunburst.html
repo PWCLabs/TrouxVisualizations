@@ -62,7 +62,7 @@ var getRoots = function() {
       });
 };
 
-var root_node = { _id: 'root', name: 'root' };
+var root_node = { _id: 'root', name: 'Capabilities' };
 
 var partition = d3.layout.partition()
     .value(function(d) { return 1; })
@@ -78,6 +78,7 @@ var path = svg.selectAll("path")
     .data(partition.nodes(root_node))
   .enter().append("path")
     .attr("d", arc)
+    .text('12')
     .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
     .on("mouseover", tip.show)
     .on("mouseout", tip.hide)
