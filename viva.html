@@ -67,6 +67,7 @@
               var ui = Viva.Graph.svg('g'),
                   // Create SVG text element with user id as content
                    svgText = Viva.Graph.svg('text').text(node.id),
+                   node_title_shadow = Viva.Graph.svg('text').attr('y', '5px').text(node.id).attr('stroke', '#cdcdcd').attr('stroke-width', '3px').attr('stroke-opacity', '0.8').attr('font-size', '16px').attr('font-family', 'Roboto').attr('text-anchor', 'right'),
                   // img = Viva.Graph.svg('image')
                   //    .attr('width', nodeSize)
                   //    .attr('height', nodeSize)
@@ -75,21 +76,25 @@
                    circle = Viva.Graph.svg('circle').attr('stroke', '#606060').attr('stroke-width', '1.5px');
 
                    if(node.id == 'Capabilities'){
+                      node_title_shadow.attr('x',   '35px')
                       svgText.attr('y', '-44px');
-                     circle.attr('r', '40px').attr("fill", 'red');
+                     circle.attr('r', '30px').attr("fill", 'red');
                    }else if(node.data.level == 1){
-                    svgText.attr('y', '-34px');
-                      circle.attr('r', '30px').attr("fill", 'green');
+                      node_title_shadow.attr('x',   '25px')
+                      svgText.attr('y', '-34px');
+                      circle.attr('r', '20px').attr("fill", 'green');
                     }else if(node.data.level == 2){
+                      node_title_shadow.attr('x',   '15px').attr('font-size', '12px')
                       svgText.attr('y', '-24px');
-                      circle.attr('r', '20px').attr("fill", 'brown');
+                      circle.attr('r', '10px').attr("fill", 'brown');
                     }else{
+                      node_title_shadow.attr('x',   '10px').attr('font-size', '10px')
                       svgText.attr('y', '-14px');
-                      circle.attr('r', '10px').attr("fill", 'yellow');
+                      circle.attr('r', '5px').attr("fill", 'yellow');
                     }
                     
-
-                  ui.append(svgText);
+                  ui.append(node_title_shadow);
+                  // ui.append(svgText);
                   ui.append(circle);
                 $(ui).click(function() { // click action
                     console.log(node.data)
