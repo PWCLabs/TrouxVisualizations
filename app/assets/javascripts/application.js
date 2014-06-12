@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require bootstrap.min
 //= require underscore-min
+//= require amplify.min
 //= require vivagraph
 //= require d3.min
 //= require d3-tip
