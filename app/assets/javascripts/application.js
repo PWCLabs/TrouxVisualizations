@@ -20,3 +20,4 @@
 //= require d3-tip
 //= require turbolinks
 //= require data
+//= require api
