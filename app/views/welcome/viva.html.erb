@@ -3,6 +3,7 @@
     cursor: pointer;
   }
 </style>
+<div id="viva-container" style="width: 100%; height: 100%"></div>
 <script>
 amplify.request('level1', {}, function(data_a) {
   console.log(data_a);
@@ -166,6 +167,7 @@ amplify.request('level1', {}, function(data_a) {
     var renderer = Viva.Graph.View.renderer(graph, {
       graphics: graphics,
       layout: layout,
+      container : $('#viva-container')[0]
     });
     renderer.run();
   }
