@@ -4,168 +4,172 @@
   }
 </style>
 <script>
-var level1Data;
-var graph
-var getChildren = function(parent_id) {
-  data_a = data_a || level1Data;
-  if (parent_id == 'root') {
-    return getRoots();
-  } else
-    return _.select(data_a["elem"],
-      function(e) {
-        return e["parentCapability"].length > 0 && e["parentCapability"][0]["_id"] == parent_id;
-      });
-};
+amplify.request('level1', {}, function(data_a) {
+  console.log(data_a);
 
-var getRoots = function(data_a) {
-  return _.select(data_a["elem"],
-    function(e) {
-      return e["parentCapability"].length == 0;
-    });
-};
-
-
-function main() {
-
-  graph = Viva.Graph.graph();
-  graph.addNode('Capabilities', {
-    name: 'Capabilities'
-  });
-
-  var graphics = Viva.Graph.View.svgGraphics();
-  var layout = Viva.Graph.Layout.forceDirected(graph, {
-    springLength: 200,
-    springCoeff: 0.0001,
-    dragCoeff: 0.01,
-    gravity: -20,
-    theta: 0.5
-  });
-
-  // $.getJSON("sample_data/a.json", function(json) {
-  //     level1Data = json;
-  var roots = getRoots(data_a);
-  var add1stNodes = function() {
-    roots.forEach(function(data) {
-      data.level = 1;
-      graph.addNode(data.name, data);
-      graph.addLink('Capabilities', data.name, data);
-    });
+  var level1Data;
+  var graph
+  var getChildren = function(parent_id) {
+    data_a = data_a || level1Data;
+    if (parent_id == 'root') {
+      return getRoots();
+    } else
+      return _.select(data_a["elem"],
+        function(e) {
+          return e["parentCapability"].length > 0 && e["parentCapability"][0]["_id"] == parent_id;
+        });
   };
 
-  add1stNodes();
+  var getRoots = function(data_a) {
+    return _.select(data_a["elem"],
+      function(e) {
+        return e["parentCapability"].length == 0;
+      });
+  };
 
 
-  // });
+  function main() {
 
-  var nodeSize = 24;
-
-
-  graphics.node(function(node) {
-    // This time it's a group of elements: http://www.w3.org/TR/SVG/struct.html#Groups
-    var ui = Viva.Graph.svg('g'),
-      // Create SVG text element with user id as content
-      svgText = Viva.Graph.svg('text').text(node.id),
-      node_title_shadow = Viva.Graph.svg('text').attr('y', '5px').text(node.id).attr('stroke', '#adadad').attr('stroke-width', '1px').attr('stroke-opacity', '0.8').attr('font-size', '12px').attr('font-family', 'Arial').attr('text-anchor', 'right'),
-      circle = Viva.Graph.svg('circle').attr('stroke', '#606060').attr('stroke-width', '1.5px');
-
-    if (node.id == 'Capabilities') {
-      node_title_shadow.attr('x', '30px')
-      svgText.attr('y', '-44px');
-      circle.attr('r', '25px').attr("fill", '#F9906F');
-    } else if (node.data.level == 1) {
-      node_title_shadow.attr('x', '25px')
-      svgText.attr('y', '-34px');
-      circle.attr('r', '20px').attr("fill", '#E0EEE8');
-    } else if (node.data.level == 2) {
-      node_title_shadow.attr('x', '25px').attr('font-size', '12px')
-      svgText.attr('y', '-24px');
-      circle.attr('r', '15px').attr("fill", '#7FECAD');
-    } else {
-      node_title_shadow.attr('x', '25px').attr('font-size', '12px')
-      svgText.attr('y', '-14px');
-      circle.attr('r', '10px').attr("fill", '#EEDEB0');
-    }
-
-    ui.append(node_title_shadow);
-    // ui.append(svgText);
-    ui.append(circle);
-    $(ui).click(function() { // click action
-
-      if (graph.getLinks(node.id).length == 1) {
-        console.log('add link');
-        if (node.data.childCapabilities) {
-          node.data.childCapabilities.forEach(function(child) {
-            child.level = 2;
-            graph.addNode(child.name, child)
-            graph.addLink(node.id, child.name, child);
-          })
-        } else {
-          var childs = getChildren(node.data._id);
-          childs.forEach(function(child) {
-            child.level = 3;
-            graph.addNode(child.name, child);
-            graph.addLink(node.id, child.name, child);
-          })
-        }
-      } else if (node.id == 'Capabilities' && graph.getLinks(node.id).length == 0) {
-        add1stNodes();
-      } else {
-
-
-        var tarNodes = [];
-        var tarLinks = [];
-        var _queryRelatedItems = function(_nodeId) {
-          var links = graph.getLinks(_nodeId);
-          links.forEach(function(link) {
-            if (link.fromId == _nodeId) {
-              tarNodes.push(link.toId);
-              tarLinks.push(link);
-              _queryRelatedItems(link.toId);
-            }
-          });
-        };
-        _queryRelatedItems(node.id);
-        tarNodes.forEach(function(tn) {
-          graph.removeNode(tn);
-        });
-        tarLinks.forEach(function(tl) {
-          graph.removeLink(tl);
-        });
-      }
-
+    graph = Viva.Graph.graph();
+    graph.addNode('Capabilities', {
+      name: 'Capabilities'
     });
 
-    return ui;
-  }).placeNode(function(nodeUI, pos) {
+    var graphics = Viva.Graph.View.svgGraphics();
+    var layout = Viva.Graph.Layout.forceDirected(graph, {
+      springLength: 200,
+      springCoeff: 0.0001,
+      dragCoeff: 0.01,
+      gravity: -20,
+      theta: 0.5
+    });
 
-    nodeUI.attr('transform',
-      'translate(' +
-      (pos.x) + ',' + (pos.y) +
-      ')');
-  });
+    // $.getJSON("sample_data/a.json", function(json) {
+    //     level1Data = json;
+    var roots = getRoots(data_a);
+    var add1stNodes = function() {
+      roots.forEach(function(data) {
+        data.level = 1;
+        graph.addNode(data.name, data);
+        graph.addLink('Capabilities', data.name, data);
+      });
+    };
 
-  graphics.link(function(link) {
-    var path = Viva.Graph.svg('path');
-    path.attr('stroke', '#333');
-    return path;
+    add1stNodes();
 
 
-  }).placeLink(function(linkUI, fromPos, toPos) {
-    // linkUI - is the object returend from link() callback above.
-    var data = 'M' + fromPos.x + ',' + fromPos.y +
-      'L' + toPos.x + ',' + toPos.y;
+    // });
 
-    // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
-    // is a common way of rendering paths in SVG:
-    linkUI.attr("d", data);
-  });
+    var nodeSize = 24;
 
-  var renderer = Viva.Graph.View.renderer(graph, {
-    graphics: graphics,
-    layout: layout,
-  });
-  renderer.run();
-}
 
-  main();
+    graphics.node(function(node) {
+      // This time it's a group of elements: http://www.w3.org/TR/SVG/struct.html#Groups
+      var ui = Viva.Graph.svg('g'),
+        // Create SVG text element with user id as content
+        svgText = Viva.Graph.svg('text').text(node.id),
+        node_title_shadow = Viva.Graph.svg('text').attr('y', '5px').text(node.id).attr('stroke', '#adadad').attr('stroke-width', '1px').attr('stroke-opacity', '0.8').attr('font-size', '12px').attr('font-family', 'Arial').attr('text-anchor', 'right'),
+        circle = Viva.Graph.svg('circle').attr('stroke', '#606060').attr('stroke-width', '1.5px');
+
+      if (node.id == 'Capabilities') {
+        node_title_shadow.attr('x', '30px')
+        svgText.attr('y', '-44px');
+        circle.attr('r', '25px').attr("fill", '#F9906F');
+      } else if (node.data.level == 1) {
+        node_title_shadow.attr('x', '25px')
+        svgText.attr('y', '-34px');
+        circle.attr('r', '20px').attr("fill", '#E0EEE8');
+      } else if (node.data.level == 2) {
+        node_title_shadow.attr('x', '25px').attr('font-size', '12px')
+        svgText.attr('y', '-24px');
+        circle.attr('r', '15px').attr("fill", '#7FECAD');
+      } else {
+        node_title_shadow.attr('x', '25px').attr('font-size', '12px')
+        svgText.attr('y', '-14px');
+        circle.attr('r', '10px').attr("fill", '#EEDEB0');
+      }
+
+      ui.append(node_title_shadow);
+      // ui.append(svgText);
+      ui.append(circle);
+      $(ui).click(function() { // click action
+
+        if (graph.getLinks(node.id).length == 1) {
+          console.log('add link');
+          if (node.data.childCapabilities) {
+            node.data.childCapabilities.forEach(function(child) {
+              child.level = 2;
+              graph.addNode(child.name, child)
+              graph.addLink(node.id, child.name, child);
+            })
+          } else {
+            var childs = getChildren(node.data._id);
+            childs.forEach(function(child) {
+              child.level = 3;
+              graph.addNode(child.name, child);
+              graph.addLink(node.id, child.name, child);
+            })
+          }
+        } else if (node.id == 'Capabilities' && graph.getLinks(node.id).length == 0) {
+          add1stNodes();
+        } else {
+
+
+          var tarNodes = [];
+          var tarLinks = [];
+          var _queryRelatedItems = function(_nodeId) {
+            var links = graph.getLinks(_nodeId);
+            links.forEach(function(link) {
+              if (link.fromId == _nodeId) {
+                tarNodes.push(link.toId);
+                tarLinks.push(link);
+                _queryRelatedItems(link.toId);
+              }
+            });
+          };
+          _queryRelatedItems(node.id);
+          tarNodes.forEach(function(tn) {
+            graph.removeNode(tn);
+          });
+          tarLinks.forEach(function(tl) {
+            graph.removeLink(tl);
+          });
+        }
+
+      });
+
+      return ui;
+    }).placeNode(function(nodeUI, pos) {
+
+      nodeUI.attr('transform',
+        'translate(' +
+        (pos.x) + ',' + (pos.y) +
+        ')');
+    });
+
+    graphics.link(function(link) {
+      var path = Viva.Graph.svg('path');
+      path.attr('stroke', '#333');
+      return path;
+
+
+    }).placeLink(function(linkUI, fromPos, toPos) {
+      // linkUI - is the object returend from link() callback above.
+      var data = 'M' + fromPos.x + ',' + fromPos.y +
+        'L' + toPos.x + ',' + toPos.y;
+
+      // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
+      // is a common way of rendering paths in SVG:
+      linkUI.attr("d", data);
+    });
+
+    var renderer = Viva.Graph.View.renderer(graph, {
+      graphics: graphics,
+      layout: layout,
+    });
+    renderer.run();
+  }
+
+    main();
+});
 </script>
