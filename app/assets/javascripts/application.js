@@ -19,5 +19,4 @@
 //= require d3.min
 //= require d3-tip
 //= require turbolinks
-//= require data
 //= require api
