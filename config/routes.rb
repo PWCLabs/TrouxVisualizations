@@ -6,4 +6,11 @@ Rails.application.routes.draw do
     get :viva
     get :tree
   end
+
+  resources :api, only: [] do
+    collection do
+      get :level1
+      get :level3
+    end
+  end
 end
