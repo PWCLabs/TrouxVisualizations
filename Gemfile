@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby "2.1.1"
 
 gem 'httparty', '~> 0.13.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
